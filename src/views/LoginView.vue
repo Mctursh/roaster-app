@@ -1,7 +1,15 @@
 <template>
-  <div class="login-parent d-flex justify-content-center align-items-center">
+  <div
+    class="
+      login-parent
+      d-flex
+      justify-content-center
+      align-items-center
+      flex-column
+    "
+  >
     <h1>UBTH Shift Management System</h1>
-    <div>
+    <div class="mt-4">
       <h3>Log in to your account</h3>
       <p>Welcome! Please enter your work details.</p>
       <div>

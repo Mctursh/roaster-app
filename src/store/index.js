@@ -13,6 +13,7 @@ export default new Vuex.Store({
     authAdminEmail: "awoniyi@ubth.edu.ng",
     authAdminPassword: "password001@",
     dates: [],
+    allUserShifs: [],
   },
   getters: {},
   mutations: {
@@ -26,7 +27,10 @@ export default new Vuex.Store({
       state.isAdmin = data;
     },
     UPDATE_DATES(state, data) {
-      state.dates = [...state.dates, data];
+      state.dates = [...state.dates, ...data];
+    },
+    UPDATE_SHIFTS(state, data) {
+      state.allUserShifs = data;
     },
   },
   actions: {},

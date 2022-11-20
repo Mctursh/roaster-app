@@ -22,6 +22,7 @@ export default {
   },
   mounted() {
     this.computeSchedules();
+    this.computeShifts();
   },
   computed: {
     ...mapState(["isAuthenticated"]),
@@ -85,6 +86,48 @@ export default {
       dates.forEach(({ month, year }) => {
         this.getDaysArray(year, month);
       });
+    },
+    computeShifts() {
+      let allShifts = [
+        {
+          name: "Nurse 1",
+          shifts: [],
+        },
+        {
+          name: "Nurse 2",
+          shifts: [],
+        },
+        {
+          name: "Nurse 3",
+          shifts: [],
+        },
+        {
+          name: "Nurse 4",
+          shifts: [],
+        },
+        {
+          name: "Nurse 5",
+          shifts: [],
+        },
+        {
+          name: "Nurse 6",
+          shifts: [],
+        },
+        {
+          name: "Nurse 7",
+          shifts: [],
+        },
+      ];
+      for (let i = 0; i < allShifts.length; i++) {
+        const elem = allShifts[i];
+        for (let j = 0; j < 11 * 14 - 3; j++) {
+          // const element = elem.shifts;
+          let val =
+            Math.random() > 0.61 ? "N" : Math.random() < 0.6 ? "M" : "F";
+          elem.shifts.push(val);
+        }
+      }
+      this.$store.commit("UPDATE_SHIFTS", allShifts);
     },
   },
 };

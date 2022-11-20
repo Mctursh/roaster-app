@@ -7,19 +7,21 @@
       </p>
     </div>
     <ScheduleList />
-    <div>
-      <ScheduleRequest />
+    <div class="d-flex align-items-center c-gap-5">
+      <ScheduleRequests />
+      <ScheduleMetrics />
     </div>
   </div>
 </template>
 
 <script>
 import ScheduleList from "../components/Home/ScheduleList.vue";
-import ScheduleRequest from "../components/Home/ScheduleRequest.vue";
+import ScheduleMetrics from "../components/Home/ScheduleMetrics.vue";
+import ScheduleRequests from "../components/Home/ScheduleRequests.vue";
 // @ is an alias to /src
 
 export default {
-  components: { ScheduleList, ScheduleRequest },
+  components: { ScheduleList, ScheduleRequests, ScheduleMetrics },
   name: "HomeView",
 };
 </script>

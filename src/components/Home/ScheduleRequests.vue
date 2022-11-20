@@ -69,7 +69,7 @@ export default {
 
   border: 1px solid #d0d5dd;
   border-radius: 10px;
-  width: 40%;
+  width: 30%;
 
   .request-status span {
     padding: 0.3em 0.725em;

@@ -1,10 +1,19 @@
 <template>
-  <div>THe schedule page</div>
+  <div class="schedules">
+    <ScheduleTable />
+  </div>
 </template>
 
 <script>
-export default {};
+import ScheduleTable from "../components/ScheduleTable.vue";
+export default {
+  components: { ScheduleTable },
+};
 </script>
 
-<style lang="scss" scoped>
+<style l
+Tableang="scss" scoped>
+.schedules {
+  padding: 2em 8em;
+}
 </style>

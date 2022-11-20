@@ -20,8 +20,72 @@ export default {
     LoginView,
     HeaderView,
   },
+  mounted() {
+    this.computeSchedules();
+  },
   computed: {
     ...mapState(["isAuthenticated"]),
+  },
+  methods: {
+    getDaysArray(year, month) {
+      let monthIndex = month - 1; // 0..11 instead of 1..12
+      let names = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+      let monthsArray = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      let date = new Date(year, monthIndex, 1);
+      let result = [];
+      while (date.getMonth() == monthIndex) {
+        let toPush = {
+          day: date.getDate(),
+          dayName: names[date.getDay()],
+          month: monthsArray[month - 1],
+        };
+        result.push(toPush);
+        date.setDate(date.getDate() + 1);
+      }
+      this.$store.commit("UPDATE_DATES", result);
+      // return result;
+    },
+    computeSchedules() {
+      let dates = [
+        {
+          month: 11,
+          year: 2022,
+        },
+        {
+          month: 12,
+          year: 2022,
+        },
+        {
+          month: 1,
+          year: 2023,
+        },
+        {
+          month: 2,
+          year: 2023,
+        },
+        {
+          month: 3,
+          year: 2023,
+        },
+      ];
+
+      dates.forEach(({ month, year }) => {
+        this.getDaysArray(year, month);
+      });
+    },
   },
 };
 </script>
@@ -267,12 +331,20 @@ h6 {
   }
 }
 
+.dark-yellow-bg {
+  background-color: #ffba78;
+}
+
 .purple {
   color: #5202aa;
 
   &-bg {
     background-color: #e3d7f2;
   }
+}
+
+.dark-purple-bg {
+  background-color: #5202aa;
 }
 
 .pending-primary {

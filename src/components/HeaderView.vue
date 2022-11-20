@@ -31,7 +31,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    activePage() {
+      return this.$route;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -47,10 +53,21 @@ header {
 }
 
 nav {
+  a {
+    &.router-link-exact-active {
+      color: #0354a6;
+    }
+    &:hover {
+      text-decoration: none;
+    }
+  }
   min-height: 10vh;
   max-height: 80px;
   padding: 2em 8em;
-
   border-bottom: 1px solid #d0d5dd;
+  p,
+  h4 {
+    margin: 0 !important;
+  }
 }
 </style>

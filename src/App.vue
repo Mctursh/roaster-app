@@ -207,6 +207,13 @@ h6 {
     background-color: #0354a6 !important;
   }
 }
+.light-blue-primary {
+  color: #3d90e3 !important;
+
+  &-bg {
+    background-color: #3d90e3 !important;
+  }
+}
 
 .fw {
   &-400 {
@@ -240,8 +247,57 @@ h6 {
 .grey {
   color: #101828;
 
+  &-secondary {
+    color: #98a2b3;
+  }
+
   &-bg {
     background-color: #101828;
+  }
+}
+.light-grey {
+  color: #667085;
+
+  &-bg {
+    background-color: #667085;
+  }
+}
+
+.yellow {
+  color: #ffba78;
+
+  &-bg {
+    background-color: #fcf3eb;
+  }
+}
+
+.purple {
+  color: #5202aa;
+
+  &-bg {
+    background-color: #e3d7f2;
+  }
+}
+
+.pending-primary {
+  color: #8f7000;
+  &-bg {
+    background-color: #fff7cf;
+  }
+}
+
+.approved-primary {
+  color: #038f00;
+  &-bg {
+    background-color: #d0ffcf;
+  }
+}
+
+.denied-primary {
+  color: #8f0000;
+
+  &-bg {
+    background-color: #ffcfcf;
   }
 }
 </style>

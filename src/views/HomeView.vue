@@ -1,18 +1,31 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="home text-align-left d-flex flex-column r-gap-3">
+    <div>
+      <h2 class="fw-700 fs-25 lh-25 grey">Welcome back, Katherine</h2>
+      <p class="light-grey fw-400 fs-18 lh-26">
+        Track and manage your work schedule all in one place.
+      </p>
+    </div>
+    <ScheduleList />
+    <div>
+      <ScheduleRequest />
+    </div>
   </div>
 </template>
 
 <script>
+import ScheduleList from "../components/Home/ScheduleList.vue";
+import ScheduleRequest from "../components/Home/ScheduleRequest.vue";
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'HomeView',
-  components: {
-    HelloWorld
-  }
-}
+  components: { ScheduleList, ScheduleRequest },
+  name: "HomeView",
+};
 </script>
+
+<style lang="scss" scoped>
+.home {
+  padding: 2em 8em;
+}
+</style>

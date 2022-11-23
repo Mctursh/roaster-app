@@ -16,11 +16,14 @@
     </header>
     <nav class="d-flex justify-content-between align-items-center white-bg">
       <div class="d-flex align-items-center c-gap-3">
-        <router-link :to="{ name: 'dashboard' }">
+        <router-link v-if="!isAdmin" :to="{ name: 'dashboard' }">
           <p class="fw-700 fs-16 lh-24">Home</p>
         </router-link>
         <router-link :to="{ name: 'schedule' }">
           <p class="fw-700 fs-16 lh-24">Schedule</p>
+        </router-link>
+        <router-link v-if="isAdmin" :to="{ name: 'request' }">
+          <p class="fw-700 fs-16 lh-24">Requests</p>
         </router-link>
       </div>
       <div>
@@ -31,8 +34,10 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   computed: {
+    ...mapState(["isAdmin"]),
     activePage() {
       return this.$route;
     },

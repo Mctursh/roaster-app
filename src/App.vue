@@ -411,4 +411,8 @@ h6 {
     background-color: #ffcfcf;
   }
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
 </style>

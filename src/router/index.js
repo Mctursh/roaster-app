@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ScheduleView from "../views/ScheduleView.vue";
 import LoginView from "../views/LoginView.vue";
+import RequestsView from "../views/RequestsView.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/schedule",
     name: "schedule",
     component: ScheduleView,
+  },
+  {
+    path: "/request",
+    name: "request",
+    component: RequestsView,
   },
   // {
   //   path: '/about',

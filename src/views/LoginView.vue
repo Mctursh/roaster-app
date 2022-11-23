@@ -75,6 +75,7 @@ export default {
       email: "",
       password: "",
       loginStep: 1,
+      isAdmin: false,
     };
   },
   computed: {
@@ -95,12 +96,14 @@ export default {
         case this.authUserEmail:
           if (this.password === this.authUserPassword) {
             this.loginStep = 2;
+            this.isAdmin = false;
           } else {
             //wrong user password
           }
           break;
         case this.authAdminEmail:
           if (this.password === this.authAdminPassword) {
+            this.isAdmin = true;
             this.$store.commit("UPDATE_TOUR", true);
             this.loginStep = 2;
           } else {
@@ -115,7 +118,13 @@ export default {
       //goto Dashboard
       this.$store.commit("UPDATE_TOUR", true);
       this.$store.commit("UPDATE_AUTH", true);
-      this.$router.push({ path: "dashboard" });
+      if (this.isAdmin) {
+        this.$store.commit("UPDATE_ADMIN", true);
+        this.$router.push({ path: "schedule" });
+      } else {
+        this.$store.commit("UPDATE_ADMIN", false);
+        this.$router.push({ path: "dashboard" });
+      }
     },
   },
 };

@@ -11,7 +11,7 @@
         <b-button class="fw-600 fs-16 lh-24 grey" variant="light"
           >My Account</b-button
         >
-        <p class="white fw-600 fs-16 lh-24">Log Out</p>
+        <p @click="handleLogOut" class="white fw-600 fs-16 lh-24 cursor-pointer">Log Out</p>
       </div>
     </header>
     <nav class="d-flex justify-content-between align-items-center white-bg">
@@ -42,6 +42,13 @@ export default {
       return this.$route;
     },
   },
+  methods: {
+    handleLogOut(){
+        this.$store.commit('UPDATE_AUTH', false)
+        this.$store.commit('UPDATE_ADMIN', false)
+        this.$router.push({name: 'login'})
+    }
+  }
 };
 </script>
 

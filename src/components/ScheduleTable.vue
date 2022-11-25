@@ -15,15 +15,17 @@
             </div>
           </td>
         </tr>
-        <tr v-for="(shift, j) in allUserShifs" :key="j">
+        <tr v-for="(shift, j) in structure.users" :key="j">
           <td>
-            <p>{{ shift.name }}</p>
+            <p>{{ shift.position }}</p>
           </td>
           <td
             v-for="(val, i) in shift.shifts.slice(start, end)"
             :key="i"
             class="px-2 py-2"
+            @click="showModal"
           >
+            <!-- v-b-modal.modal-center -->
             <div
               v-if="val != 'F'"
               :class="[val == 'N' ? 'dark-purple-bg' : 'dark-yellow-bg']"
@@ -53,6 +55,40 @@
         >Next</b-button
       >
     </div>
+    <b-modal id="modal-center" :hide-footer="true" :hide-header="true" modal-title="No" modal-header="No" centered>
+      <div class="schedule-modal px-4 py-4">
+        <p class="fw-700 fs-18 lh-16 mb-4" >Modify Schedule</p>
+        <p class="fw-600 fs-14 lh-20 mb-2" >Katherin Aihoun</p>
+        <div class="select-date mb-5" >
+          <b-form-input :id="`type-date`" :type="'date'"></b-form-input>
+        </div>
+        <div class="py-2 d-flex flex-column r-gap-3 mb-3">
+          <p class="fw-600 fs-14 lh-20">Select Shift</p>
+          <div class="select-shifts">
+            <p :class="{selected : selectedShift == 'Day'}" @click="handleShiftChange('Day')">Day Shift</p>
+            <p :class="{selected : selectedShift == 'Night'}" @click="handleShiftChange('Night')">Night Shift</p>
+            <p :class="{selected : selectedShift == 'Off'}" @click="handleShiftChange('Off')" >Off Duty</p>
+          </div>
+        </div>
+        <div class="w-100 req-action c-gap-3" >
+          <b-button
+              @click="prevSchedules"
+              class="fw-600 fs-16 lh-24 grey"
+              variant="light"
+              >Cancel</b-button
+          >
+          <b-button
+              @click="makeToast('success')"
+              class="fw-600 fs-16 lh-24 blue-primary-bg white"
+              >Apply</b-button
+          >
+        </div>
+      </div>
+    </b-modal>
+
+    <b-toast id="example-toast" title="BootstrapVue" static no-auto-hide>
+      Successfully Requested Shift swap
+    </b-toast>
   </div>
 </template>
 
@@ -65,15 +101,33 @@ export default {
       page: 1,
       start: 0,
       end: 14,
+      selectedShift: "Night"
     };
   },
   computed: {
-    ...mapState(["dates", "allUserShifs"]),
+    ...mapState(["dates", "structure"]),
     dateToShow() {
       return this.dates.slice(this.start, this.end);
     },
   },
   methods: {
+    handleShiftChange(evt){
+      this.selectedShift = evt
+    },
+    makeToast(variant = null) {
+      this.$bvToast.toast('Toast body content', {
+        title: `Variant ${variant || 'default'}`,
+        toaster: 'b-toaster-top-center',
+        variant: variant,
+        solid: true
+      })
+    },
+    showModal(){
+      this.$bvModal.show('modal-center')	
+    },
+    closeModal(){
+      this.$bvModal.hide('modal-center')	
+    },
     nextSchedules() {
       if (this.page == 11) return;
       this.start += 14;
@@ -126,4 +180,40 @@ button {
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
   border-radius: 8px;
 }
+
+.select-date{
+  width: 40%;
+  height: 38px;
+}
+
+.select-shifts{
+  background: #F2F4F7;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  padding: .125em;
+  height: 38px;
+
+p{
+  color: #000000;
+  text-align: center;
+  height: 100%;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.selected{
+    border-radius: 8px;
+    background-color: #FFBA78;
+    color: #ffffff;
+  }
+}
+}
+.req-action{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
 </style>

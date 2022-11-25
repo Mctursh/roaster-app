@@ -14,6 +14,31 @@ export default new Vuex.Store({
     authAdminPassword: "password001@",
     dates: [],
     allUserShifs: [],
+    structure: {
+      users: [
+        {
+          id: 1,
+          firstName: '',
+          lastName: '',
+          position: '',
+          role: '',
+          request: [],
+          shifts: []
+        },
+      ],
+      request: [
+        {
+          reqStatus: 'Pending', // Pending or Completed
+          state: 'Approved', // Pending, Declined or Approved,
+          reqUserId: 1,
+          currentShift: 'N',
+          targetShift: "M",
+          targetUserId: 2,
+          targetDate: '',
+          approvalAdminName: 'Prof Princewill'
+        },
+      ],
+    }
   },
   getters: {},
   mutations: {
@@ -32,6 +57,9 @@ export default new Vuex.Store({
     UPDATE_SHIFTS(state, data) {
       state.allUserShifs = data;
     },
+    UPDATE_STRUCTURE(state, data){
+      state.structure = data
+    }
   },
   actions: {},
   modules: {},

@@ -418,7 +418,7 @@
                     >Approve</b-button
                 >
               </div>
-              <div class="d-flex align-items-baseline" >
+              <div class="d-flex align-items-center" >
                 <b-icon-check class="h3 blue-primary" ></b-icon-check>
                 <p class="mb-0 fw-600 fs-16 lh-24 blue-primary">Approved Nov 23, 4:53 PM by Admin Name</p>
               </div>

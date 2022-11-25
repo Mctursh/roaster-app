@@ -16,6 +16,35 @@ import { mapState } from "vuex";
 import HeaderView from "./components/HeaderView.vue";
 
 export default {
+  data(){
+    return {
+      structure: {
+        users: [
+          {
+            id: 1,
+            firstName: '',
+            lastName: '',
+            position: '',
+            role: '',
+            request: [],
+            shifts: []
+          },
+        ],
+        request: [
+          {
+            reqStatus: 'Pending', // Pending or Completed
+            state: 'Approved', // Pending, Declined or Approved,
+            reqUserId: 1,
+            currentShift: 'N',
+            targetShift: "M",
+            targetUserId: 2,
+            targetDate: '',
+            approvalAdminName: 'Prof Princewill'
+          },
+        ],
+      }
+    }
+  },
   components: {
     LoginView,
     HeaderView,
@@ -45,7 +74,13 @@ export default {
         "Nov",
         "Dec",
       ];
-      let date = new Date(year, monthIndex, 1);
+        let dayToStart
+      if(month == 11){
+        dayToStart = new Date().getDate()
+        } else {
+          dayToStart = 1
+        }
+      let date = new Date(year, monthIndex, dayToStart);
       let result = [];
       while (date.getMonth() == monthIndex) {
         let toPush = {
@@ -55,6 +90,7 @@ export default {
         };
         result.push(toPush);
         date.setDate(date.getDate() + 1);
+        
       }
       this.$store.commit("UPDATE_DATES", result);
       // return result;
@@ -90,44 +126,90 @@ export default {
     computeShifts() {
       let allShifts = [
         {
-          name: "Nurse 1",
-          shifts: [],
-        },
+            id: 1,
+            firstName: '',
+            lastName: '',
+            position: 'Nurse',
+            role: 'User',
+            request: [],
+            shifts: []
+          },
         {
-          name: "Nurse 2",
-          shifts: [],
-        },
+            id: 2,
+            firstName: '',
+            lastName: '',
+            position: 'Nurse',
+            role: 'User',
+            request: [],
+            shifts: []
+          },
         {
-          name: "Nurse 3",
-          shifts: [],
-        },
+            id: 3,
+            firstName: '',
+            lastName: '',
+            position: 'Medical Officer',
+            role: 'User',
+            request: [],
+            shifts: []
+          },
         {
-          name: "Nurse 4",
-          shifts: [],
-        },
+            id: 4,
+            firstName: '',
+            lastName: '',
+            position: 'Registrars',
+            role: 'User',
+            request: [],
+            shifts: []
+          },
         {
-          name: "Nurse 5",
-          shifts: [],
-        },
+            id: 5,
+            firstName: '',
+            lastName: '',
+            position: 'Senior Registrars',
+            role: 'User',
+            request: [],
+            shifts: []
+          },
         {
-          name: "Nurse 6",
-          shifts: [],
-        },
+            id: 6,
+            firstName: '',
+            lastName: '',
+            position: 'Fellow',
+            role: 'User',
+            request: [],
+            shifts: []
+          },
         {
-          name: "Nurse 7",
-          shifts: [],
-        },
+            id: 7,
+            firstName: '',
+            lastName: '',
+            position: 'Consultant',
+            role: 'User',
+            request: [],
+            shifts: []
+          },
+        {
+            id: 8,
+            firstName: '',
+            lastName: '',
+            position: 'Consultant',
+            role: 'Admin',
+            request: [],
+            shifts: []
+          },
       ];
       for (let i = 0; i < allShifts.length; i++) {
         const elem = allShifts[i];
         for (let j = 0; j < 11 * 14 - 3; j++) {
           // const element = elem.shifts;
           let val =
-            Math.random() > 0.61 ? "N" : Math.random() < 0.6 ? "M" : "F";
+            Math.random() > 0.49 ? "M" : Math.random() < 0.499999999 ? "N" : "F";
           elem.shifts.push(val);
         }
+        
       }
-      this.$store.commit("UPDATE_SHIFTS", allShifts);
+      this.structure.users = allShifts
+      this.$store.commit("UPDATE_STRUCTURE", this.structure);
     },
   },
 };

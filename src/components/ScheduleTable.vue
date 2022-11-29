@@ -1,5 +1,10 @@
 <template>
   <div>
+    <!-- <b-button
+        @click="handleRequestState('Approved')"
+        class="fw-600 fs-16 lh-24 blue-primary-bg white"
+        ><span class="fs-23">+</span> New Request</b-button
+    > -->
     <div class="table-parent">
       <table class="w-100">
         <tr>
@@ -23,7 +28,7 @@
             v-for="(val, i) in shift.shifts.slice(start, end)"
             :key="i"
             class="px-2 py-2"
-            @click="showModal"
+            @click="showModal(val, shift.id)"
           >
             <!-- v-b-modal.modal-center -->
             <div
@@ -33,11 +38,6 @@
               <span class="white fw-700 fs-13 lh-16"> {{ val }} </span>
             </div>
           </td>
-          <!-- <td class="px-2 py-2">
-            <div class="dark-yellow-bg">
-              <span class="white fw-700 fs-13 lh-16"> M </span>
-            </div>
-          </td> -->
         </tr>
       </table>
     </div>
@@ -60,25 +60,25 @@
         <p class="fw-700 fs-18 lh-16 mb-4" >Modify Schedule</p>
         <p class="fw-600 fs-14 lh-20 mb-2" >Katherin Aihoun</p>
         <div class="select-date mb-5" >
-          <b-form-input :id="`type-date`" :type="'date'"></b-form-input>
+          <b-form-input @input="handleInput" :id="`type-date`" :type="'date'"></b-form-input>
         </div>
         <div class="py-2 d-flex flex-column r-gap-3 mb-3">
           <p class="fw-600 fs-14 lh-20">Select Shift</p>
-          <div class="select-shifts">
-            <p :class="{selected : selectedShift == 'Day'}" @click="handleShiftChange('Day')">Day Shift</p>
-            <p :class="{selected : selectedShift == 'Night'}" @click="handleShiftChange('Night')">Night Shift</p>
-            <p :class="{selected : selectedShift == 'Off'}" @click="handleShiftChange('Off')" >Off Duty</p>
+          <div class="select-shifts cursor-pointer">
+            <p :class="{selected : targetShift == 'M'}" @click="handleShiftChange('M')">Day Shift</p>
+            <p :class="{selected : targetShift == 'N'}" @click="handleShiftChange('N')">Night Shift</p>
+            <p :class="{selected : targetShift == 'F'}" @click="handleShiftChange('F')" >Off Duty</p>
           </div>
         </div>
         <div class="w-100 req-action c-gap-3" >
           <b-button
-              @click="prevSchedules"
+              @click="closeModal"
               class="fw-600 fs-16 lh-24 grey"
               variant="light"
               >Cancel</b-button
           >
           <b-button
-              @click="makeToast('success')"
+              @click="handleApply"
               class="fw-600 fs-16 lh-24 blue-primary-bg white"
               >Apply</b-button
           >
@@ -101,7 +101,10 @@ export default {
       page: 1,
       start: 0,
       end: 14,
-      selectedShift: "Night"
+      selectedShift: "N",
+      targetShift: "N",
+      targetUserId: null,
+      targetDate: ''
     };
   },
   computed: {
@@ -111,8 +114,30 @@ export default {
     },
   },
   methods: {
+    handleInput(evt){
+      this.targetDate = evt
+    },
+    handleApply(){
+      this.makeToast('success')
+      let req = {
+        reqStatus: "Pending",
+        state: "Pending",
+        reqUserId: 1,
+        currentShift: this.selectedShift,
+        targetShift: this.targetShift,
+        targetUserId: this.targetUserId,
+        targetDate: this.targetDate,
+        approvalAdminName: 'Prof Princewill',
+        createdTime: new Date().toLocaleTimeString(),
+        statusTime: "",
+        shiftId: new Date().getTime()
+      }
+      this.structure.request.push(req)
+      this.$store.commit('UPDATE_STRUCTURE', this.structure)
+      this.closeModal()
+    },
     handleShiftChange(evt){
-      this.selectedShift = evt
+      this.targetShift = evt
     },
     makeToast(variant = null) {
       this.$bvToast.toast('Toast body content', {
@@ -122,7 +147,10 @@ export default {
         solid: true
       })
     },
-    showModal(){
+    showModal(val, id){
+      this.targetUserId = id
+      this.selectedShift = val
+      this.targetShift = val
       this.$bvModal.show('modal-center')	
     },
     closeModal(){

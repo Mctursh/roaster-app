@@ -30,18 +30,7 @@ export default {
             shifts: []
           },
         ],
-        request: [
-          {
-            reqStatus: 'Pending', // Pending or Completed
-            state: 'Approved', // Pending, Declined or Approved,
-            reqUserId: 1,
-            currentShift: 'N',
-            targetShift: "M",
-            targetUserId: 2,
-            targetDate: '',
-            approvalAdminName: 'Prof Princewill'
-          },
-        ],
+        request: [],
       }
     }
   },

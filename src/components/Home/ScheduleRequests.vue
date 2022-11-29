@@ -1,51 +1,67 @@
 <template>
   <div class="px-4 py-4 schedule-request">
     <p class="fw-700 fs-18 lh-16 grey mb-3">Requests</p>
-    <div class="d-flex flex-column r-gap-3">
-      <div class="d-flex justify-content-between align-items-center">
+    <div v-if="!computedReq.length" class="h-100 d-flex justify-content-center align-items-center">
+      <span class="fw-400 fs-16 lh-24 grey">
+        There are no requests
+      </span>
+    </div>
+    <div v-else class="d-flex flex-column r-gap-3">
+      <div v-for="(req, i) in computedReq" :key="i" class="d-flex justify-content-between align-items-center">
         <div class="request-info d-flex flex-column">
-          <p class="fw-400 fs-16 lh-24 grey">Swap Shift</p>
-          <p class="light-grey fw-400 fs-13 lh-24">27 Nov 2022</p>
+          <p class="fw-400 fs-16 lh-24 grey">{{ req.targetShift != 'F' ? 'Swap Shift' : 'Off Day' }}</p>
+          <p class="light-grey fw-400 fs-13 lh-24">{{ convertDate(req.targetDate) }}</p>
         </div>
         <div class="request-status">
-          <span class="pending-primary pending-primary-bg fw-400 fs-13 lh-24"
-            >Pending</span
-          >
-        </div>
-      </div>
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="request-info d-flex flex-column">
-          <p class="fw-400 fs-16 lh-24 grey">Swap Shift</p>
-          <p class="light-grey fw-400 fs-13 lh-24">27 Nov 2022</p>
-        </div>
-        <div class="request-status">
-          <span class="approved-primary approved-primary-bg fw-400 fs-13 lh-24"
-            >Approved</span
-          >
-        </div>
-      </div>
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="request-info d-flex flex-column">
-          <p class="fw-400 fs-16 lh-24 grey">Swap Shift</p>
-          <p class="light-grey fw-400 fs-13 lh-24">27 Nov 2022</p>
-        </div>
-        <div class="request-status">
-          <span class="denied-primary denied-primary-bg fw-400 fs-13 lh-24"
-            >Denied</span
+          <span :class="{'pending-primary pending-primary-bg' : req.state == 'Pending','denied-primary denied-primary-bg' : req.state == 'Declined','approved-primary approved-primary-bg' : req.state == 'Approved',}" class="fw-400 fs-13 lh-24"
+            >{{ req.state }}</span
           >
         </div>
       </div>
     </div>
-    <!-- <div class="d-flex flex-column r-gap-3">
-    </div>
-    <div class="d-flex flex-column r-gap-3">
-    </div> -->
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: "ScheduleRequest",
+  data(){
+    return {
+      monthsArray: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ]
+    }
+  },
+  computed: {
+    ...mapState([
+      'structure',
+    ]),
+    computedReq(){
+      return this.structure.request
+    },
+  },
+  methods: {
+    convertDate(date){
+      let d = new Date(date)
+      let day = d.getDate()
+      let month = this.monthsArray[d.getMonth()]
+      let year = d.getFullYear()
+      return `${day} ${month} ${year}`
+    }
+  }
 };
 </script>
 

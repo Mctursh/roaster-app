@@ -1,7 +1,7 @@
 <template>
   <div class="home text-align-left d-flex flex-column r-gap-3">
     <div>
-      <h2 class="fw-700 fs-25 lh-25 grey">Welcome back, Katherine</h2>
+      <h2 class="fw-700 fs-25 lh-25 grey">Welcome back, Elizabeth</h2>
       <p class="light-grey fw-400 fs-18 lh-26">
         Track and manage your work schedule all in one place.
       </p>

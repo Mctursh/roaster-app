@@ -87,7 +87,7 @@
     </b-modal>
 
     <b-toast id="example-toast" title="BootstrapVue" static no-auto-hide>
-      Successfully Requested Shift swap
+      
     </b-toast>
   </div>
 </template>
@@ -140,8 +140,8 @@ export default {
       this.targetShift = evt
     },
     makeToast(variant = null) {
-      this.$bvToast.toast('Toast body content', {
-        title: `Variant ${variant || 'default'}`,
+      this.$bvToast.toast('Request Successful', {
+        title: `Success`,
         toaster: 'b-toaster-top-center',
         variant: variant,
         solid: true

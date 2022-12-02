@@ -14,6 +14,7 @@
 import LoginView from "../src/views/LoginView.vue";
 import { mapState } from "vuex";
 import HeaderView from "./components/HeaderView.vue";
+import Axios from "./auth/axios"
 
 export default {
   data(){
@@ -41,6 +42,10 @@ export default {
   mounted() {
     this.computeSchedules();
     this.computeShifts();
+    const payload = {name: 'Edo rensei', email: 'bankai@email.com'}
+    Axios.post('login', payload).then(r => {
+      console.log(r);
+    })
   },
   computed: {
     ...mapState(["isAuthenticated"]),

@@ -40,7 +40,9 @@ export default new Vuex.Store({
       ],
     }
   },
-  getters: {},
+  getters: {
+    loginState(state) { return state.isAuthenticated }
+  },
   mutations: {
     UPDATE_AUTH(state, data) {
       state.isAuthenticated = data;
@@ -61,6 +63,10 @@ export default new Vuex.Store({
       state.structure = data
     }
   },
-  actions: {},
+  actions: {
+    setAuth(context, value) {
+      context.commit('UPDATE_AUTH', value)
+    }
+  },
   modules: {},
 });

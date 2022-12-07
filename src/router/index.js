@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import ScheduleView from "../views/ScheduleView.vue";
 import LoginView from "../views/LoginView.vue";
 import RequestsView from "../views/RequestsView.vue";
+import store from "../store/index"
 
 Vue.use(VueRouter);
 
@@ -42,6 +43,16 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (store.getters.loginState) {
+    if (to.path === '/login') next('/dashboard')
+    else next();
+  } else {
+    if (to.path === '/login') next()
+    else next('/login');
+  }
 });
 
 export default router;

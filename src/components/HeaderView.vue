@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import Axios from '@/auth/axios';
 import { mapState } from "vuex";
 export default {
   computed: {
@@ -44,9 +45,12 @@ export default {
   },
   methods: {
     handleLogOut(){
-        this.$store.commit('UPDATE_AUTH', false)
-        this.$store.commit('UPDATE_ADMIN', false)
-        this.$router.push({name: 'login'})
+        Axios.post('/logout').then(r => {
+          console.log(r);
+          this.$store.commit('UPDATE_AUTH', false)
+          this.$store.commit('UPDATE_ADMIN', false)
+          this.$router.push({name: 'login'})
+        })
     }
   }
 };

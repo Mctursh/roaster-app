@@ -1,7 +1,8 @@
 <template>
-  <div class="px-4 py-4 sub-schedule w-100 d-flex align-items-start c-gap-4">
+  <div class="px-4 py-4 sub-schedule w-100 align-items-start c-gap-4">
+      <!-- v-for="(shift , j) in schedules" -->
     <div
-      v-for="(shift , j) in schedules"
+      v-for="(shift , j) in compShifts"
       :key="j"
       class="
         d-flex
@@ -13,7 +14,7 @@
     >
       <p class="light-blue-primary fs-16 fw-700 lh-20 text-capitalize">{{ shift.dayName }}</p>
       <p class="light-blue-primary fs-16 fw-700 lh-20 text-capitalize">{{ `${shift.day} ${shift.month}` }}</p>
-      <p :class="{ 'yellow yellow-bg' : shift.shift == 'M', 'purple purple-bg': shift.shift == 'N', 'approved-primary approved-primary-bg': shift.shift == 'F'  }" >{{ shift.shift }}</p>
+      <p :class="{ 'yellow yellow-bg' : shift.shift == 'M', 'purple purple-bg': shift.shift == 'N', 'approved-primary approved-primary-bg': shift.shift == 'O'  }" >{{ shift.shift }}</p>
       <div v-if="shift.isActive" class="light-blue-primary-bg"></div>
     </div>
   </div>
@@ -21,6 +22,7 @@
 
 <script>
   import { mapState } from 'vuex';
+  import moment from "moment"
 export default {
   name: "ScheduleList",
   data(){
@@ -38,7 +40,11 @@ export default {
         "Oct",
         "Nov",
         "Dec",
-      ]
+      ],
+      todayShiftIndex: null,
+      todayShiftId: null,
+      weekStartIndex: '',
+      weekStartDateId: '',
     }
   },
     computed: {
@@ -46,25 +52,37 @@ export default {
         'structure',
         'dates'
       ]),
-      schedules(){
+      compShifts(){
         let toReturn = []
-        let d = new Date()
-        let currMonth = this.monthsArray[d.getMonth()];
-        let currDay = d.getDate()
-        for (let i = 0; i < 12; i++) {
-          const elemShift = this.structure.users[0].shifts[i];
-          const elemDate = this.dates[i]
-          let temp = {
-            shift: elemShift,
-            ...elemDate,
-            isActive: currMonth == elemDate.month && currDay == elemDate.day
+        this.$store.getters.getUserShifts.forEach((shift, idx) => {
+          // active shift day 
+          if(new Date().toDateString() == new Date(shift.date).toDateString()){
+            this.todayShiftId = shift._id
+            this.todayShiftIndex = idx
           }
-          toReturn.push(temp)
-        }
-        return toReturn
-      }
-    },
+          // active week shift 
+          if (new Date(moment().startOf('week')).toDateString() == new Date(shift.date).toDateString()){
+            this.weekStartIndex = shift.date
+            this.weekStartDateId = idx
+          }
 
+        });
+
+        toReturn = this.$store.getters.getUserShifts.slice(this.weekStartIndex, this.weekStartIndex + 7)
+        toReturn = toReturn.map((elem) => {
+          let temp = moment(elem.date)
+          return {
+            ...elem,
+            isActive: elem._id == this.todayShiftId,
+            dayName: temp.format('ddd'),
+            day: temp.format('DD'),
+            month: temp.format('MMM')
+          }
+        })
+
+        return toReturn
+      },
+    },
 };
 </script>
 
@@ -78,6 +96,9 @@ export default {
     #f0f5ff;
   border: 1px solid #d0d5dd;
   border-radius: 10px;
+
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
 
   > div {
     p {

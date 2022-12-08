@@ -13,6 +13,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 
 Vue.config.productionTip = false;
 
+
 Axios.get('/checklogin')
   .then(() => store.dispatch('setAuth', true))
   .catch(() => store.dispatch('setAuth', false))
@@ -28,8 +29,9 @@ Axios.get('/checklogin')
       store,
       render: (h) => h(App),
     }).$mount("#app");
-    
     Vue.use(BootstrapVue);
     Vue.use(BootstrapVueIcons);
+    // Vue.use(moment)
+    // Vue.config.globalProperties.$moment=moment;
   });
 

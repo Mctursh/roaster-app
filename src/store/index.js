@@ -8,10 +8,7 @@ export default new Vuex.Store({
     isAuthenticated: false,
     isAdmin: false,
     viewedTour: false,
-    authUserEmail: "elizabeth@ubth.edu.ng",
-    authUserPassword: "password123@",
-    authAdminEmail: "awoniyi@ubth.edu.ng",
-    authAdminPassword: "password001@",
+    userData: [],
     dates: [],
     allUserShifs: [],
     structure: {
@@ -41,7 +38,13 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    loginState(state) { return state.isAuthenticated }
+    loginState(state) { return state.isAuthenticated },
+    getUserShifts(state) {
+      return state.userData.shifts
+    },
+    getUserName(state) {
+      return {firstName : state.userData.firstName, lastName :state.userData.lastName }
+    }
   },
   mutations: {
     UPDATE_AUTH(state, data) {
@@ -61,11 +64,17 @@ export default new Vuex.Store({
     },
     UPDATE_STRUCTURE(state, data){
       state.structure = data
+    },
+    UPDATE_AUTH_USER(state, data){
+      state.userData = data
     }
   },
   actions: {
     setAuth(context, value) {
       context.commit('UPDATE_AUTH', value)
+    },
+    setAuthUser(context, value){
+      context.commit('UPDATE_AUTH_USER', value)
     }
   },
   modules: {},

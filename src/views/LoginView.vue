@@ -90,34 +90,14 @@ export default {
   },
   methods: {
     handleLogin() {
-       const payload = {email: this.email, password :this.password}
-    Axios.post('/login', payload).then(r => {
-      console.log(r);
-              this.loginStep = 2;
+      const payload = {email: this.email, password :this.password}
+      Axios.post('/login', payload).then(r => {
+        this.$store.dispatch('setAuthUser', r.data.user)
+        this.loginStep = 2;
       // this.$store.dispatch('setAuth', true)
-    })
-      if (this.loginStep == 2) {
-        //go to dashboard
-      }
-      // switch (this.email.toLowerCase()) {
-      //   case this.authUserEmail:
-      //     if (this.password === this.authUserPassword) {
-      //       this.isAdmin = false;
-      //     } else {
-      //       //wrong user password
-      //     }
-      //     break;
-      //   case this.authAdminEmail:
-      //     if (this.password === this.authAdminPassword) {
-      //       this.isAdmin = true;
-      //       this.$store.commit("UPDATE_TOUR", true);
-      //       this.loginStep = 2;
-      //     } else {
-      //       //wrong admin password
-      //     }
-      //     break;
-      //   default:
-      //     break;
+      })
+      // if (this.loginStep == 2) {
+      //   //go to dashboard
       // }
     },
     handleContinue() {

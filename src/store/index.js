@@ -9,6 +9,7 @@ export default new Vuex.Store({
     isAdmin: false,
     viewedTour: false,
     userData: [],
+    userId: '',
     dates: [],
     allUserShifs: [],
     structure: {
@@ -44,6 +45,9 @@ export default new Vuex.Store({
     },
     getUserName(state) {
       return {firstName : state.userData.firstName, lastName :state.userData.lastName }
+    },
+    getUserId(state){
+      return state.userId
     }
   },
   mutations: {
@@ -67,6 +71,9 @@ export default new Vuex.Store({
     },
     UPDATE_AUTH_USER(state, data){
       state.userData = data
+    },
+    UPDATE_USER_ID(state, data){
+      state.userId = data
     }
   },
   actions: {

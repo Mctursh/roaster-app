@@ -15,7 +15,11 @@ Vue.config.productionTip = false;
 
 
 Axios.get('/checklogin')
-  .then(() => store.dispatch('setAuth', true))
+  .then((r) => {
+    console.log(r);
+    store.commit('UPDATE_USER_ID', r.data.data._id)
+    store.dispatch('setAuth', true)
+  })
   .catch(() => store.dispatch('setAuth', false))
   .finally(() => {
     // Vue.use(VueAxios, axios);

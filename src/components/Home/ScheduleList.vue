@@ -45,44 +45,56 @@ export default {
       todayShiftId: null,
       weekStartIndex: '',
       weekStartDateId: '',
+      userShifts: []
     }
   },
-    computed: {
-      ...mapState([
-        'structure',
-        'dates'
-      ]),
-      compShifts(){
-        let toReturn = []
-        this.$store.getters.getUserShifts.forEach((shift, idx) => {
-          // active shift day 
-          if(new Date().toDateString() == new Date(shift.date).toDateString()){
-            this.todayShiftId = shift._id
-            this.todayShiftIndex = idx
-          }
-          // active week shift 
-          if (new Date(moment().startOf('week')).toDateString() == new Date(shift.date).toDateString()){
-            this.weekStartIndex = shift.date
-            this.weekStartDateId = idx
-          }
+  mounted(){
+  // this.userShifts = this.userData.shifts
+  },
+  watch: {
+    userData(){
+      this.userShifts = this.userData.shifts
+    }
+  },
+  computed: {
+    ...mapState([
+      'userData',
+      'dates',
+    ]),
+    // userShifts(){
+    //   return 
+    // },
+    compShifts(){
+      let toReturn = []
+      this.userShifts.forEach((shift, idx) => {
+        // active shift day 
+        if(new Date().toDateString() == new Date(shift.date).toDateString()){
+          this.todayShiftId = shift._id
+          this.todayShiftIndex = idx
+        }
+        // active week shift 
+        if (new Date(moment().startOf('week')).toDateString() == new Date(shift.date).toDateString()){
+          this.weekStartIndex = shift.date
+          this.weekStartDateId = idx
+        }
 
-        });
+      });
 
-        toReturn = this.$store.getters.getUserShifts.slice(this.weekStartIndex, this.weekStartIndex + 7)
-        toReturn = toReturn.map((elem) => {
-          let temp = moment(elem.date)
-          return {
-            ...elem,
-            isActive: elem._id == this.todayShiftId,
-            dayName: temp.format('ddd'),
-            day: temp.format('DD'),
-            month: temp.format('MMM')
-          }
-        })
+      toReturn = this.userShifts.slice(this.weekStartIndex, this.weekStartIndex + 7)
+      toReturn = toReturn.map((elem) => {
+        let temp = moment(elem.date)
+        return {
+          ...elem,
+          isActive: elem._id == this.todayShiftId,
+          dayName: temp.format('ddd'),
+          day: temp.format('DD'),
+          month: temp.format('MMM')
+        }
+      })
 
-        return toReturn
-      },
+      return toReturn
     },
+  },
 };
 </script>
 

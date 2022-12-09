@@ -19,6 +19,7 @@ import Axios from '@/auth/axios';
 import ScheduleList from "../components/Home/ScheduleList.vue";
 import ScheduleMetrics from "../components/Home/ScheduleMetrics.vue";
 import ScheduleRequests from "../components/Home/ScheduleRequests.vue";
+import { mapState } from 'vuex';
 // @ is an alias to /src
 
 export default {
@@ -26,14 +27,24 @@ export default {
   name: "HomeView",
   mounted(){
     // this.generateShifts()
-    
+    this.getUser()
   },
   computed: {
+    ...mapState([
+      'userId'
+    ]),
     userFirstName(){
         return this.$store.getters.getUserName.firstName
-      }
+      },
+      
   },
   methods:{
+    getUser(){
+      Axios.get(`users/${this.userId}`).then(r => {
+        console.log(r);
+        this.$store.dispatch('setAuthUser', r.data.user)
+      })
+    },
     generateShifts(){
       Axios.post('users/generate-shift').then(() => {
       // Axios.post('users/generate-shift').then(() => {

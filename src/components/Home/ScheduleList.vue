@@ -48,9 +48,6 @@ export default {
       userShifts: []
     }
   },
-  mounted(){
-  // this.userShifts = this.userData.shifts
-  },
   watch: {
     userData(){
       this.userShifts = this.userData.shifts

@@ -9,7 +9,7 @@
       <table class="w-100">
         <tr>
           <td></td>
-          <td v-for="(date, idx) in dateToShow" :key="idx">
+          <td v-for="(date, idx) in tableHeaders" :key="idx">
             <div class="d-flex flex-column text-align-center">
               <p class="light-blue-primary fs-16 fw-700 lh-20 text-capitalize">
                 {{ date.dayName }}
@@ -20,22 +20,23 @@
             </div>
           </td>
         </tr>
-        <tr v-for="(shift, j) in structure.users" :key="j">
+        <tr v-for="(shift, j) in tableData" :key="j">
           <td>
-            <p>{{ shift.position }}</p>
+            <p>{{ shift.name }}</p>
           </td>
           <td
-            v-for="(val, i) in shift.shifts.slice(start, end)"
+            v-for="(val, i) in shift.shifts"
             :key="i"
             class="px-2 py-2"
-            @click="showModal(val, shift.id)"
+            @click="showModal(val, shift._id)"
           >
             <!-- v-b-modal.modal-center -->
             <div
-              v-if="val != 'F'"
-              :class="[val == 'N' ? 'dark-purple-bg' : 'dark-yellow-bg']"
+              v-if="val.shift != 'O'"
+              :class="{ 'dark-purple-bg': val.shift == 'N', 'dark-yellow-bg' : val.shift == 'M'}"
             >
-              <span class="white fw-700 fs-13 lh-16"> {{ val }} </span>
+              <!-- :class="[val.shift == 'N' && 'dark-purple-bg' : 'dark-yellow-bg']" -->
+              <span class="white fw-700 fs-13 lh-16"> {{ val.shift }} </span>
             </div>
           </td>
         </tr>
@@ -60,7 +61,7 @@
         <p class="fw-700 fs-18 lh-16 mb-4" >Modify Schedule</p>
         <p class="fw-600 fs-14 lh-20 mb-2" >Katherin Aihoun</p>
         <div class="select-date mb-5" >
-          <b-form-input @input="handleInput" :id="`type-date`" :type="'date'"></b-form-input>
+          <b-form-input :value="new Date()" @input="handleInput" :id="`type-date`" :type="'date'"></b-form-input>
         </div>
         <div class="py-2 d-flex flex-column r-gap-3 mb-3">
           <p class="fw-600 fs-14 lh-20">Select Shift</p>
@@ -93,18 +94,25 @@
 </template>
 
 <script>
+import moment from 'moment';
+// import Axios from '@/auth/axios';
 import { mapState } from "vuex";
 export default {
   name: "ScheduleTable",
+  props: {
+    users: {
+      type: Array
+    }
+  },
   data() {
     return {
-      page: 1,
+      page: 0,
       start: 0,
       end: 14,
       selectedShift: "N",
       targetShift: "N",
       targetUserId: null,
-      targetDate: ''
+      targetDate: '',
     };
   },
   computed: {
@@ -112,7 +120,39 @@ export default {
     dateToShow() {
       return this.dates.slice(this.start, this.end);
     },
+    tableHeaders(){
+      return this.tableData[0] && this.tableData[0].shifts || []
+    },
+    tableData(){
+      let toReturn = []
+      this.users.forEach(user => {
+        let currUser = {
+          name: user.firstName,
+          shifts: [],
+        }
+        user.shifts.forEach(shift => {
+          // if (new Date(moment().startOf('week')).toDateString() == new Date(shift.date).toDateString()){
+          if (moment(shift.date).isSame(moment().add(this.page, 'week'), 'week')){
+            let temp = moment(shift.date)
+
+            currUser.shifts.push({
+              ...shift,
+              dayName: temp.format('ddd'),
+          day: temp.format('D'),
+          month: temp.format('MMM')
+            })
+            // this.weekStartIndex = shift.date
+            // this.weekStartDateId = 
+          }
+        })
+
+        toReturn.push(currUser)
+      })
+
+      return toReturn
+    }
   },
+  
   methods: {
     handleInput(evt){
       this.targetDate = evt
@@ -157,15 +197,15 @@ export default {
       this.$bvModal.hide('modal-center')	
     },
     nextSchedules() {
-      if (this.page == 11) return;
-      this.start += 14;
-      this.end += 14;
+      if (this.page == Math.ceil(this.users[0].shifts.length / 7)) return;
+      // this.start += 14;
+      // this.end += 14;
       this.page++;
     },
     prevSchedules() {
-      if (this.page == 1) return;
-      this.start -= 14;
-      this.end -= 14;
+      if (this.page == 0) return;
+      // this.start -= 14;
+      // this.end -= 14;
       this.page--;
     },
   },

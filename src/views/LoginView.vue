@@ -93,6 +93,9 @@ export default {
       const payload = {email: this.email, password :this.password}
       Axios.post('/login', payload).then(r => {
         this.$store.dispatch('setAuthUser', r.data.user)
+        this.$store.commit('UPDATE_USER_ID', r.data.user._id)
+        console.log(r);
+        
         this.loginStep = 2;
       // this.$store.dispatch('setAuth', true)
       })

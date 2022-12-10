@@ -34,7 +34,7 @@ export default {
       'userId'
     ]),
     userFirstName(){
-        return this.$store.getters.getUserName.firstName
+        return this.$store.getters.getUserName.firstName || ''
       },
       
   },

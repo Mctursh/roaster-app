@@ -28,7 +28,7 @@
             v-for="(val, i) in shift.shifts"
             :key="i"
             class="px-2 py-2"
-            @click="showModal(val, shift._id)"
+            @click="showModal(val, shift)"
           >
             <!-- v-b-modal.modal-center -->
             <div
@@ -58,17 +58,27 @@
     </div>
     <b-modal id="modal-center" :hide-footer="true" :hide-header="true" modal-title="No" modal-header="No" centered>
       <div class="schedule-modal px-4 py-4">
-        <p class="fw-700 fs-18 lh-16 mb-4" >Modify Schedule</p>
-        <p class="fw-600 fs-14 lh-20 mb-2" >Katherin Aihoun</p>
+        <p class="fw-700 fs-18 lh-16 mb-4" >Request swap</p>
+        <p class="fw-600 fs-14 lh-20 mb-2" >{{targetUserName}}</p>
         <div class="select-date mb-5" >
-          <b-form-input :value="new Date()" @input="handleInput" :id="`type-date`" :type="'date'"></b-form-input>
+          <!-- <b-form-input :value="new Date()" @input="handleInput" :id="`type-date`" :type="'date'"></b-form-input> -->
+            <!-- :value="dateValue" -->
+            <!-- @input="handleDateInput" -->
+                <!-- v-if="show" -->
+                <!-- @input="isDateStartInput" -->
+          <DatePicker
+                :allowFutureDate="true"
+                :allowPastDate="false"
+                dateId="startDate"
+                :value="selectedDate"
+              />
         </div>
         <div class="py-2 d-flex flex-column r-gap-3 mb-3">
           <p class="fw-600 fs-14 lh-20">Select Shift</p>
           <div class="select-shifts cursor-pointer">
             <p :class="{selected : targetShift == 'M'}" @click="handleShiftChange('M')">Day Shift</p>
             <p :class="{selected : targetShift == 'N'}" @click="handleShiftChange('N')">Night Shift</p>
-            <p :class="{selected : targetShift == 'F'}" @click="handleShiftChange('F')" >Off Duty</p>
+            <p :class="{selected : targetShift == 'O'}" @click="handleShiftChange('F')" >Off Duty</p>
           </div>
         </div>
         <div class="w-100 req-action c-gap-3" >
@@ -95,10 +105,15 @@
 
 <script>
 import moment from 'moment';
+import DatePicker from "./DatePicker.vue";
+// import VCalendar from 'v-calendar';
 // import Axios from '@/auth/axios';
 import { mapState } from "vuex";
 export default {
   name: "ScheduleTable",
+  components: {
+    DatePicker
+  },
   props: {
     users: {
       type: Array
@@ -113,10 +128,14 @@ export default {
       targetShift: "N",
       targetUserId: null,
       targetDate: '',
+      targetDateObj: '',
+      targetUserName: '',
+      targetUserObj: {},
+      selectedDate: ''
     };
   },
   computed: {
-    ...mapState(["dates", "structure"]),
+    ...mapState(["dates", "structure", "userId"]),
     dateToShow() {
       return this.dates.slice(this.start, this.end);
     },
@@ -127,7 +146,8 @@ export default {
       let toReturn = []
       this.users.forEach(user => {
         let currUser = {
-          name: user.firstName,
+          id: user._id,
+          name: `${user.firstName} ${user.lastName}`,
           shifts: [],
         }
         user.shifts.forEach(shift => {
@@ -158,23 +178,23 @@ export default {
       this.targetDate = evt
     },
     handleApply(){
-      this.makeToast('success')
-      let req = {
-        reqStatus: "Pending",
-        state: "Pending",
-        reqUserId: 1,
-        currentShift: this.selectedShift,
-        targetShift: this.targetShift,
-        targetUserId: this.targetUserId,
-        targetDate: this.targetDate,
-        approvalAdminName: 'Prof Princewill',
-        createdTime: new Date().toLocaleTimeString(),
-        statusTime: "",
-        shiftId: new Date().getTime()
+      let payload = {
+        date: this.targetDateObj,
+        requestUser: this.users.filter(user => user._id == this.userId)[0],
+        targetUser: this.targetUserObj,
+        // userShift,
+        targetShift: this.targetShift
       }
-      this.structure.request.push(req)
-      this.$store.commit('UPDATE_STRUCTURE', this.structure)
-      this.closeModal()
+
+      console.log(payload);
+
+      // Axios.post('/requests/create', payload).then(r => {
+      //   this.makeToast('success')
+      //   console.log(r);
+      //   this.closeModal()
+      // })
+      // this.structure.request.push(req)
+      // this.$store.commit('UPDATE_STRUCTURE', this.structure)
     },
     handleShiftChange(evt){
       this.targetShift = evt
@@ -187,10 +207,16 @@ export default {
         solid: true
       })
     },
-    showModal(val, id){
-      this.targetUserId = id
-      this.selectedShift = val
-      this.targetShift = val
+    showModal(val, userObj){
+      if(userObj.id == this.userId) return
+      let temp = moment(val.date)
+      this.targetDateObj = val.date
+      this.selectedDate = `${temp.format('MMM')} ${temp.format('DD')}, ${temp.format('YYYY')}`
+      this.targetUserId = userObj.id
+      this.targetUserName = userObj.name
+      this.targetUserObj = userObj
+      this.selectedShift = val.shift
+      this.targetShift = val.shift
       this.$bvModal.show('modal-center')	
     },
     closeModal(){

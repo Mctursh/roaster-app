@@ -8,10 +8,15 @@
         UBTH - Department of Family Medicine
       </h4>
       <div class="d-flex align-items-center c-gap-3">
-        <b-button class="fw-600 fs-16 lh-24 grey" variant="light"
+        <!-- <b-button class="fw-600 fs-16 lh-24 grey" variant="light"
           >My Account</b-button
+        > -->
+        <p
+          @click="handleLogOut"
+          class="white fw-600 fs-16 lh-24 cursor-pointer"
         >
-        <p @click="handleLogOut" class="white fw-600 fs-16 lh-24 cursor-pointer">Log Out</p>
+          Log Out
+        </p>
       </div>
     </header>
     <nav class="d-flex justify-content-between align-items-center white-bg">
@@ -25,6 +30,10 @@
         <router-link v-if="isAdmin" :to="{ name: 'request' }">
           <p class="fw-700 fs-16 lh-24">Requests</p>
         </router-link>
+        <!-- <router-link v-if="isAdmin" :to="{ name: 'staff' }"> -->
+        <router-link :to="{ name: 'staff' }">
+          <p class="fw-700 fs-16 lh-24">Staffs</p>
+        </router-link>
       </div>
       <div>
         <p class="fw-700 fs-16 lh-24">Notification</p>
@@ -34,7 +43,7 @@
 </template>
 
 <script>
-import Axios from '@/auth/axios';
+import Axios from "@/auth/axios";
 import { mapState } from "vuex";
 export default {
   computed: {
@@ -44,15 +53,15 @@ export default {
     },
   },
   methods: {
-    handleLogOut(){
-        Axios.post('/logout').then(r => {
-          console.log(r);
-          this.$store.commit('UPDATE_AUTH', false)
-          this.$store.commit('UPDATE_ADMIN', false)
-          this.$router.push({name: 'login'})
-        })
-    }
-  }
+    handleLogOut() {
+      Axios.post("/logout").then((r) => {
+        console.log(r);
+        this.$store.commit("UPDATE_AUTH", false);
+        this.$store.commit("UPDATE_ADMIN", false);
+        this.$router.push({ name: "login" });
+      });
+    },
+  },
 };
 </script>
 

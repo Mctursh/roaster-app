@@ -492,4 +492,8 @@ h6 {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.home {
+  padding: 2em 8em;
+}
 </style>

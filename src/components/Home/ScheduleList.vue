@@ -77,7 +77,8 @@ export default {
 
       });
 
-      toReturn = this.userShifts.slice(this.weekStartIndex, this.weekStartIndex + 7)
+      // toReturn = this.userShifts.slice(this.weekStartIndex, this.weekStartIndex + 7)
+      toReturn = this.userShifts.slice(this.weekStartDateId, this.weekStartDateId + 7)
       toReturn = toReturn.map((elem) => {
         let temp = moment(elem.date)
         return {

@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import ScheduleView from "../views/ScheduleView.vue";
 import LoginView from "../views/LoginView.vue";
 import RequestsView from "../views/RequestsView.vue";
+import StaffView from "../views/StaffView.vue"
 import store from "../store/index"
 
 Vue.use(VueRouter);
@@ -28,6 +29,11 @@ const routes = [
     path: "/request",
     name: "request",
     component: RequestsView,
+  },
+  {
+    path: "/staff",
+    name: "staff",
+    component: StaffView,
   },
   // {
   //   path: '/about',

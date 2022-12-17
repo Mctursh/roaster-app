@@ -123,13 +123,22 @@ export default {
         this.$store.dispatch("setAuthUser", r.data.user);
         this.$store.commit("UPDATE_USER_ID", r.data.user._id);
         console.log(r);
-
+        this.handleUserCheck(r.data.user.role);
         this.loginStep = 2;
         // this.$store.dispatch('setAuth', true)
       });
-      // if (this.loginStep == 2) {
-      //   //go to dashboard
-      // }
+    },
+    handleUserCheck(role) {
+      switch (role) {
+        case "Admin":
+          this.isAdmin = true;
+          break;
+        case "User":
+          this.isAdmin = false;
+          break;
+        default:
+          break;
+      }
     },
     handleContinue() {
       //goto Dashboard

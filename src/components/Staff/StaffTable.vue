@@ -23,27 +23,36 @@
           </td>
         </tr>
         <!-- <tr v-for="(shift, j) in tableData" :key="j"> -->
-        <tr>
+        <tr v-for="(staff, i) in staffs" :key="i">
           <!-- v-for="(val, i) in shift.shifts"
             :key="i" -->
           <td class="px-2 py-2">
             <div>
-              <p class="fw-400 fs-14 lh-20 mb-0">Olivia Kate</p>
+              <p class="fw-400 fs-14 lh-20 mb-0 text-capitalize">
+                {{ `${staff.firstName} ${staff.lastName}` }}
+              </p>
             </div>
           </td>
           <td class="px-2 py-2">
             <div>
-              <p class="fw-400 fs-14 lh-20 mb-0">oliviakate@ubth.com</p>
+              <p class="fw-400 fs-14 lh-20 mb-0">{{ staff.email }}</p>
             </div>
           </td>
           <td class="px-2 py-2">
             <div>
-              <p class="fw-400 fs-14 lh-20 mb-0">Consultant</p>
+              <p class="fw-400 fs-14 lh-20 mb-0 text-capitalize">
+                {{ staff.type || `Consultant` }}
+              </p>
             </div>
           </td>
           <td class="px-2 py-2">
             <div class="d-flex justify-content-center">
-              <div @click="$emit('delete')" class="delete-icon"></div>
+              <div
+                @click="
+                  $emit('delete', { id: staff._id, name: staff.firstName })
+                "
+                class="delete-icon"
+              ></div>
             </div>
           </td>
         </tr>
@@ -55,6 +64,11 @@
 <script>
 export default {
   name: "StaffTable",
+  props: {
+    staffs: {
+      type: Array,
+    },
+  },
 };
 </script>
 

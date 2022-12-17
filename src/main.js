@@ -13,21 +13,19 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 
 Vue.config.productionTip = false;
 
-
-Axios.get('/checklogin')
+Axios.get("/checklogin")
   .then((r) => {
     console.log(r);
-    store.commit('UPDATE_USER_ID', r.data.data._id)
-    store.dispatch('setAuth', true)
+    store.commit("UPDATE_USER_ID", r.data.data._id);
+    store.dispatch("setAuth", true);
+    if (r.data.data.role == "Admin") {
+      store.commit("UPDATE_ADMIN", true);
+    } else {
+      store.commit("UPDATE_ADMIN", false);
+    }
   })
-  .catch(() => store.dispatch('setAuth', false))
+  .catch(() => store.dispatch("setAuth", false))
   .finally(() => {
-    // Vue.use(VueAxios, axios);
-    // new Vue({
-    //   router,
-    //   store,
-    //   render: h => h(App)
-    // }).$mount("#app");
     new Vue({
       router,
       store,
@@ -38,4 +36,3 @@ Axios.get('/checklogin')
     // Vue.use(moment)
     // Vue.config.globalProperties.$moment=moment;
   });
-

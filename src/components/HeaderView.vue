@@ -30,13 +30,12 @@
         <router-link v-if="isAdmin" :to="{ name: 'request' }">
           <p class="fw-700 fs-16 lh-24">Requests</p>
         </router-link>
-        <!-- <router-link v-if="isAdmin" :to="{ name: 'staff' }"> -->
-        <router-link :to="{ name: 'staff' }">
+        <router-link v-if="isAdmin" :to="{ name: 'staff' }">
           <p class="fw-700 fs-16 lh-24">Staffs</p>
         </router-link>
       </div>
       <div>
-        <p class="fw-700 fs-16 lh-24">Notification</p>
+        <NotificationDropdown />
       </div>
     </nav>
   </div>
@@ -45,7 +44,11 @@
 <script>
 import Axios from "@/auth/axios";
 import { mapState } from "vuex";
+import NotificationDropdown from "./NotificationDropdown.vue";
 export default {
+  components: {
+    NotificationDropdown,
+  },
   computed: {
     ...mapState(["isAdmin"]),
     activePage() {

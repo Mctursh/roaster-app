@@ -21,7 +21,7 @@
           </td>
         </tr>
         <tr v-for="(shift, j) in tableData" :key="j">
-          <td>
+          <td :class="{ 'blue-primary-bg white': shift.id == userId }">
             <p>{{ shift.name }}</p>
           </td>
           <td
@@ -29,11 +29,15 @@
             :key="i"
             class="px-2 py-2"
             @click="showModal(val, shift)"
+            :class="{ 'primary-bg': shift.id == userId }"
           >
             <!-- v-b-modal.modal-center -->
             <div
               v-if="val.shift != 'O'"
-              :class="{ 'dark-purple-bg': val.shift == 'N', 'dark-yellow-bg' : val.shift == 'M'}"
+              :class="{
+                'dark-purple-bg': val.shift == 'N',
+                'dark-yellow-bg': val.shift == 'M',
+              }"
             >
               <!-- :class="[val.shift == 'N' && 'dark-purple-bg' : 'dark-yellow-bg']" -->
               <span class="white fw-700 fs-13 lh-16"> {{ val.shift }} </span>
@@ -56,183 +60,233 @@
         >Next</b-button
       >
     </div>
-    <b-modal id="modal-center" :hide-footer="true" :hide-header="true" modal-title="No" modal-header="No" centered>
+    <b-modal
+      id="modal-center"
+      :hide-footer="true"
+      :hide-header="true"
+      modal-title="No"
+      modal-header="No"
+      centered
+    >
       <div class="schedule-modal px-4 py-4">
-        <p class="fw-700 fs-18 lh-16 mb-4" >Request swap</p>
-        <p class="fw-600 fs-14 lh-20 mb-2" >{{targetUserName}}</p>
-        <div class="select-date mb-5" >
+        <p class="fw-700 fs-18 lh-16 mb-4">Request swap</p>
+        <p class="fw-600 fs-14 lh-20 mb-2">{{ targetUserName }}</p>
+        <div class="select-date mb-5">
           <!-- <b-form-input :value="new Date()" @input="handleInput" :id="`type-date`" :type="'date'"></b-form-input> -->
-            <!-- :value="dateValue" -->
-            <!-- @input="handleDateInput" -->
-                <!-- v-if="show" -->
-                <!-- @input="isDateStartInput" -->
+          <!-- :value="dateValue" -->
+          <!-- @input="handleDateInput" -->
+          <!-- v-if="show" -->
+          <!-- @input="isDateStartInput" -->
           <DatePicker
-                :allowFutureDate="true"
-                :allowPastDate="false"
-                dateId="startDate"
-                :value="selectedDate"
-              />
+            :allowFutureDate="true"
+            :allowPastDate="false"
+            dateId="startDate"
+            :value="selectedDate"
+          />
         </div>
         <div class="py-2 d-flex flex-column r-gap-3 mb-3">
           <p class="fw-600 fs-14 lh-20">Select Shift</p>
           <div class="select-shifts cursor-pointer">
-            <p :class="{selected : targetShift == 'M'}" @click="handleShiftChange('M')">Day Shift</p>
-            <p :class="{selected : targetShift == 'N'}" @click="handleShiftChange('N')">Night Shift</p>
-            <p :class="{selected : targetShift == 'O'}" @click="handleShiftChange('F')" >Off Duty</p>
+            <p
+              :class="{ selected: targetShift == 'M' }"
+              @click="handleShiftChange('M')"
+            >
+              Day Shift
+            </p>
+            <p
+              :class="{ selected: targetShift == 'N' }"
+              @click="handleShiftChange('N')"
+            >
+              Night Shift
+            </p>
+            <p
+              :class="{ selected: targetShift == 'O' }"
+              @click="handleShiftChange('F')"
+            >
+              Off Duty
+            </p>
           </div>
         </div>
-        <div class="w-100 req-action c-gap-3" >
+        <div class="w-100 req-action c-gap-3">
           <b-button
-              @click="closeModal"
-              class="fw-600 fs-16 lh-24 grey"
-              variant="light"
-              >Cancel</b-button
+            @click="closeModal"
+            class="fw-600 fs-16 lh-24 grey"
+            variant="light"
+            >Cancel</b-button
           >
           <b-button
-              @click="handleApply"
-              class="fw-600 fs-16 lh-24 blue-primary-bg white"
-              >Apply</b-button
+            @click="handleApply"
+            class="fw-600 fs-16 lh-24 blue-primary-bg white"
+            >Apply</b-button
           >
         </div>
       </div>
     </b-modal>
 
     <b-toast id="example-toast" title="BootstrapVue" static no-auto-hide>
-      
     </b-toast>
   </div>
 </template>
 
 <script>
-import moment from 'moment';
+import moment from "moment";
 import DatePicker from "./DatePicker.vue";
 // import VCalendar from 'v-calendar';
 // import Axios from '@/auth/axios';
 import { mapState } from "vuex";
+import Axios from "@/auth/axios";
 export default {
   name: "ScheduleTable",
   components: {
-    DatePicker
+    DatePicker,
   },
   props: {
     users: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   data() {
     return {
       page: 0,
+      activePage: 0,
       start: 0,
       end: 14,
       selectedShift: "N",
       targetShift: "N",
       targetUserId: null,
-      targetDate: '',
-      targetDateObj: '',
-      targetUserName: '',
+      targetDate: "",
+      targetDateObj: "",
+      targetUserName: "",
       targetUserObj: {},
-      selectedDate: ''
+      selectedDate: "",
     };
+  },
+  watch: {
+    users: {
+      handler() {
+        let arr = this.users[0].shifts;
+        for (let i = 0; i < arr.length; i++) {
+          const shift = arr[i];
+          if (
+            moment(shift.date).isSame(moment().add(this.page, "week"), "week")
+          ) {
+            this.page = Math.ceil(i / 7);
+            i += arr.length;
+          }
+        }
+      },
+    },
   },
   computed: {
     ...mapState(["dates", "structure", "userId"]),
     dateToShow() {
       return this.dates.slice(this.start, this.end);
     },
-    tableHeaders(){
-      return this.tableData[0] && this.tableData[0].shifts || []
+    tableHeaders() {
+      return (this.tableData[0] && this.tableData[0].shifts) || [];
     },
-    tableData(){
-      let toReturn = []
-      this.users.forEach(user => {
+    tableData() {
+      let toReturn = [];
+      this.users.forEach((user) => {
         let currUser = {
           id: user._id,
           name: `${user.firstName} ${user.lastName}`,
           shifts: [],
-        }
-        user.shifts.forEach(shift => {
-          // if (new Date(moment().startOf('week')).toDateString() == new Date(shift.date).toDateString()){
-          if (moment(shift.date).isSame(moment().add(this.page, 'week'), 'week')){
-            let temp = moment(shift.date)
+        };
+        user.shifts.forEach((shift) => {
+          if (
+            moment(shift.date).isSame(
+              moment().add(this.activePage, "week"),
+              "week"
+            )
+          ) {
+            let temp = moment(shift.date);
 
             currUser.shifts.push({
               ...shift,
-              dayName: temp.format('ddd'),
-          day: temp.format('D'),
-          month: temp.format('MMM')
-            })
-            // this.weekStartIndex = shift.date
-            // this.weekStartDateId = 
+              dayName: temp.format("ddd"),
+              day: temp.format("D"),
+              month: temp.format("MMM"),
+            });
           }
-        })
+        });
 
-        toReturn.push(currUser)
-      })
+        toReturn.push(currUser);
+      });
 
-      return toReturn
-    }
-  },
-  
-  methods: {
-    handleInput(evt){
-      this.targetDate = evt
+      return toReturn;
     },
-    handleApply(){
+  },
+
+  methods: {
+    handleInput(evt) {
+      this.targetDate = evt;
+    },
+    handleApply() {
       let payload = {
         date: this.targetDateObj,
-        requestUser: this.users.filter(user => user._id == this.userId)[0],
+        requestUser: this.users.filter((user) => user._id == this.userId)[0],
         targetUser: this.targetUserObj,
         // userShift,
-        targetShift: this.targetShift
-      }
+        targetShift: this.targetShift,
+      };
 
       console.log(payload);
 
-      // Axios.post('/requests/create', payload).then(r => {
-      //   this.makeToast('success')
-      //   console.log(r);
-      //   this.closeModal()
-      // })
+      Axios.post("/requests/create", payload).then((r) => {
+        this.makeToast("success");
+        console.log(r);
+        this.closeModal();
+      });
       // this.structure.request.push(req)
       // this.$store.commit('UPDATE_STRUCTURE', this.structure)
     },
-    handleShiftChange(evt){
-      this.targetShift = evt
+    handleShiftChange(evt) {
+      this.targetShift = evt;
     },
     makeToast(variant = null) {
-      this.$bvToast.toast('Request Successful', {
+      this.$bvToast.toast("Request Successful", {
         title: `Success`,
-        toaster: 'b-toaster-top-center',
+        toaster: "b-toaster-top-center",
         variant: variant,
-        solid: true
-      })
+        solid: true,
+      });
     },
-    showModal(val, userObj){
-      if(userObj.id == this.userId) return
-      let temp = moment(val.date)
-      this.targetDateObj = val.date
-      this.selectedDate = `${temp.format('MMM')} ${temp.format('DD')}, ${temp.format('YYYY')}`
-      this.targetUserId = userObj.id
-      this.targetUserName = userObj.name
-      this.targetUserObj = userObj
-      this.selectedShift = val.shift
-      this.targetShift = val.shift
-      this.$bvModal.show('modal-center')	
+    showModal(val, userObj) {
+      if (userObj.id == this.userId) {
+        this.targetShift = "O";
+      } else {
+        this.targetShift = val.shift;
+      }
+      let temp = moment(val.date);
+      this.targetDateObj = val.date;
+      this.selectedDate = `${temp.format("MMM")} ${temp.format(
+        "DD"
+      )}, ${temp.format("YYYY")}`;
+      this.targetUserId = userObj.id;
+      this.targetUserName = userObj.name;
+      this.targetUserObj = userObj;
+      this.selectedShift = val.shift;
+      this.$bvModal.show("modal-center");
     },
-    closeModal(){
-      this.$bvModal.hide('modal-center')	
+    closeModal() {
+      this.$bvModal.hide("modal-center");
     },
     nextSchedules() {
-      if (this.page == Math.ceil(this.users[0].shifts.length / 7)) return;
+      if (this.page < Math.ceil(this.users[0].shifts.length / 7) - 1) {
+        this.page++;
+        this.activePage++;
+      }
       // this.start += 14;
       // this.end += 14;
-      this.page++;
     },
     prevSchedules() {
-      if (this.page == 0) return;
+      if (this.page > 0) {
+        this.page--;
+        this.activePage--;
+      }
       // this.start -= 14;
       // this.end -= 14;
-      this.page--;
     },
   },
 };
@@ -275,39 +329,39 @@ button {
   border-radius: 8px;
 }
 
-.select-date{
+.select-date {
   width: 40%;
   height: 38px;
 }
 
-.select-shifts{
-  background: #F2F4F7;
+.select-shifts {
+  background: #f2f4f7;
   border-radius: 8px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
-  padding: .125em;
+  padding: 0.125em;
   height: 38px;
 
-p{
-  color: #000000;
-  text-align: center;
-  height: 100%;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &.selected{
-    border-radius: 8px;
-    background-color: #FFBA78;
-    color: #ffffff;
+  p {
+    color: #000000;
+    text-align: center;
+    height: 100%;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.selected {
+      border-radius: 8px;
+      background-color: #ffba78;
+      color: #ffffff;
+    }
   }
 }
+.req-action {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
-.req-action{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
 </style>

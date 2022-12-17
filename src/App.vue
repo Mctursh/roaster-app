@@ -17,23 +17,23 @@ import HeaderView from "./components/HeaderView.vue";
 // import Axios from "./auth/axios"
 
 export default {
-  data(){
+  data() {
     return {
       structure: {
         users: [
           {
             id: 1,
-            firstName: '',
-            lastName: '',
-            position: '',
-            role: '',
+            firstName: "",
+            lastName: "",
+            position: "",
+            role: "",
             request: [],
-            shifts: []
+            shifts: [],
           },
         ],
         request: [],
-      }
-    }
+      },
+    };
   },
   components: {
     LoginView,
@@ -69,12 +69,12 @@ export default {
         "Nov",
         "Dec",
       ];
-        let dayToStart
-      if(month == 11){
-        dayToStart = new Date().getDate()
-        } else {
-          dayToStart = 1
-        }
+      let dayToStart;
+      if (month == 11) {
+        dayToStart = new Date().getDate();
+      } else {
+        dayToStart = 1;
+      }
       let date = new Date(year, monthIndex, dayToStart);
       let result = [];
       while (date.getMonth() == monthIndex) {
@@ -85,7 +85,6 @@ export default {
         };
         result.push(toPush);
         date.setDate(date.getDate() + 1);
-        
       }
       this.$store.commit("UPDATE_DATES", result);
       // return result;
@@ -121,89 +120,92 @@ export default {
     computeShifts() {
       let allShifts = [
         {
-            id: 1,
-            firstName: '',
-            lastName: '',
-            position: 'Nurse',
-            role: 'User',
-            request: [],
-            shifts: []
-          },
+          id: 1,
+          firstName: "",
+          lastName: "",
+          position: "Nurse",
+          role: "User",
+          request: [],
+          shifts: [],
+        },
         {
-            id: 2,
-            firstName: '',
-            lastName: '',
-            position: 'Nurse',
-            role: 'User',
-            request: [],
-            shifts: []
-          },
+          id: 2,
+          firstName: "",
+          lastName: "",
+          position: "Nurse",
+          role: "User",
+          request: [],
+          shifts: [],
+        },
         {
-            id: 3,
-            firstName: '',
-            lastName: '',
-            position: 'Medical Officer',
-            role: 'User',
-            request: [],
-            shifts: []
-          },
+          id: 3,
+          firstName: "",
+          lastName: "",
+          position: "Medical Officer",
+          role: "User",
+          request: [],
+          shifts: [],
+        },
         {
-            id: 4,
-            firstName: '',
-            lastName: '',
-            position: 'Registrars',
-            role: 'User',
-            request: [],
-            shifts: []
-          },
+          id: 4,
+          firstName: "",
+          lastName: "",
+          position: "Registrars",
+          role: "User",
+          request: [],
+          shifts: [],
+        },
         {
-            id: 5,
-            firstName: '',
-            lastName: '',
-            position: 'Senior Registrars',
-            role: 'User',
-            request: [],
-            shifts: []
-          },
+          id: 5,
+          firstName: "",
+          lastName: "",
+          position: "Senior Registrars",
+          role: "User",
+          request: [],
+          shifts: [],
+        },
         {
-            id: 6,
-            firstName: '',
-            lastName: '',
-            position: 'Fellow',
-            role: 'User',
-            request: [],
-            shifts: []
-          },
+          id: 6,
+          firstName: "",
+          lastName: "",
+          position: "Fellow",
+          role: "User",
+          request: [],
+          shifts: [],
+        },
         {
-            id: 7,
-            firstName: '',
-            lastName: '',
-            position: 'Consultant',
-            role: 'User',
-            request: [],
-            shifts: []
-          },
+          id: 7,
+          firstName: "",
+          lastName: "",
+          position: "Consultant",
+          role: "User",
+          request: [],
+          shifts: [],
+        },
         {
-            id: 8,
-            firstName: '',
-            lastName: '',
-            position: 'Consultant',
-            role: 'Admin',
-            request: [],
-            shifts: []
-          },
+          id: 8,
+          firstName: "",
+          lastName: "",
+          position: "Consultant",
+          role: "Admin",
+          request: [],
+          shifts: [],
+        },
       ];
       for (let i = 0; i < allShifts.length; i++) {
         const elem = allShifts[i];
         for (let j = 0; j < 11 * 14 - 3; j++) {
           // const element = elem.shifts;
           let val =
-            Math.random() > 0.49 ? "M" : Math.random() < 0.499999999 ? "N" : "F";
+            Math.random() > 0.49
+              ? "M"
+              : Math.random() < 0.499999999
+              ? "N"
+              : "F";
           elem.shifts.push(val);
         }
-        
       }
-      this.structure.users = allShifts
+      this.structure.users = allShifts;
       this.$store.commit("UPDATE_STRUCTURE", this.structure);
     },
   },
@@ -392,6 +394,12 @@ h6 {
 
   &-bg {
     background-color: #3d90e3 !important;
+  }
+}
+
+.primary {
+  &-bg {
+    background-color: #f0f5ff;
   }
 }
 

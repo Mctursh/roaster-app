@@ -131,8 +131,6 @@
 <script>
 import moment from "moment";
 import DatePicker from "./DatePicker.vue";
-// import VCalendar from 'v-calendar';
-// import Axios from '@/auth/axios';
 import { mapState } from "vuex";
 import Axios from "@/auth/axios";
 export default {

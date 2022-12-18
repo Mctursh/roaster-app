@@ -18,7 +18,7 @@
               <span>Email</span>
               <b-form-input
                 type="email"
-                v-model="email"
+                v-model="adminEmail"
                 placeholder="Enter your email"
               ></b-form-input>
             </div>
@@ -26,14 +26,18 @@
               <span>Password</span>
               <b-form-input
                 type="password"
-                v-model="password"
+                v-model="adminPassword"
                 placeholder="Enter your passowrd"
               ></b-form-input>
             </div>
           </div>
-          <span class="blue-primary fs-14 lh-20">Forgot password?</span>
+          <span
+            @click="toastForgot"
+            class="blue-primary fs-14 lh-20 cursor-pointer"
+            >Forgot password?</span
+          >
           <b-button
-            @click="handleLogin"
+            @click="handleAdminLogin"
             class="blue-primary-bg mt-3 fw-600 fs-16 lh-24"
             >Sign in</b-button
           >
@@ -58,7 +62,11 @@
               ></b-form-input>
             </div>
           </div>
-          <span class="blue-primary fs-14 lh-20">Forgot password?</span>
+          <span
+            @click="toastForgot"
+            class="cursor-pointer blue-primary fs-14 lh-20"
+            >Forgot password?</span
+          >
           <b-button
             @click="handleLogin"
             class="blue-primary-bg mt-3 fw-600 fs-16 lh-24"
@@ -92,6 +100,8 @@
         >Continue</b-button
       >
     </div>
+    <b-toast id="example-toast" title="BootstrapVue" static no-auto-hide>
+    </b-toast>
   </div>
 </template>
 
@@ -103,6 +113,8 @@ export default {
     return {
       email: "",
       password: "",
+      adminEmail: "",
+      adminPassword: "",
       loginStep: 1,
       isAdmin: false,
     };
@@ -117,6 +129,27 @@ export default {
     ]),
   },
   methods: {
+    toastForgot() {
+      this.$bvToast.toast(
+        "An email with a link to reset your password has been sent",
+        {
+          title: `Success`,
+          toaster: "b-toaster-top-center",
+          variant: "success",
+          solid: true,
+        }
+      );
+    },
+    handleAdminLogin() {
+      const payload = { email: this.adminEmail, password: this.adminPassword };
+      Axios.post("/login", payload).then((r) => {
+        this.$store.dispatch("setAuthUser", r.data.user);
+        this.$store.commit("UPDATE_USER_ID", r.data.user._id);
+        console.log(r);
+        this.handleUserCheck(r.data.user.role);
+        this.loginStep = 2;
+      });
+    },
     handleLogin() {
       const payload = { email: this.email, password: this.password };
       Axios.post("/login", payload).then((r) => {
@@ -125,7 +158,6 @@ export default {
         console.log(r);
         this.handleUserCheck(r.data.user.role);
         this.loginStep = 2;
-        // this.$store.dispatch('setAuth', true)
       });
     },
     handleUserCheck(role) {

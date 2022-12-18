@@ -128,9 +128,9 @@ export default {
       "authAdminPassword",
     ]),
   },
-  // mounted() {
-  //   Axios.post("/users/create-admin");
-  // },
+  mounted() {
+    Axios.post("/users/create-admin");
+  },
   methods: {
     toastForgot() {
       this.$bvToast.toast(

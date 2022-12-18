@@ -9,19 +9,20 @@ export default new Vuex.Store({
     isAdmin: false,
     viewedTour: false,
     userData: [],
-    userId: '',
+    userId: "",
     dates: [],
     allUserShifs: [],
+    notifications: [],
     structure: {
       users: [
         {
           id: 1,
-          firstName: '',
-          lastName: '',
-          position: '',
-          role: '',
+          firstName: "",
+          lastName: "",
+          position: "",
+          role: "",
           request: [],
-          shifts: []
+          shifts: [],
         },
       ],
       request: [
@@ -36,19 +37,24 @@ export default new Vuex.Store({
         //   approvalAdminName: 'Prof Princewill'
         // },
       ],
-    }
+    },
   },
   getters: {
-    loginState(state) { return state.isAuthenticated },
+    loginState(state) {
+      return state.isAuthenticated;
+    },
     getUserShifts(state) {
-      return state.userData.shifts
+      return state.userData.shifts;
     },
     getUserName(state) {
-      return {firstName : state.userData.firstName, lastName :state.userData.lastName }
+      return {
+        firstName: state.userData.firstName,
+        lastName: state.userData.lastName,
+      };
     },
-    getUserId(state){
-      return state.userId
-    }
+    getUserId(state) {
+      return state.userId;
+    },
   },
   mutations: {
     UPDATE_AUTH(state, data) {
@@ -66,23 +72,26 @@ export default new Vuex.Store({
     UPDATE_SHIFTS(state, data) {
       state.allUserShifs = data;
     },
-    UPDATE_STRUCTURE(state, data){
-      state.structure = data
+    UPDATE_STRUCTURE(state, data) {
+      state.structure = data;
     },
-    UPDATE_AUTH_USER(state, data){
-      state.userData = data
+    UPDATE_AUTH_USER(state, data) {
+      state.userData = data;
     },
-    UPDATE_USER_ID(state, data){
-      state.userId = data
-    }
+    UPDATE_USER_ID(state, data) {
+      state.userId = data;
+    },
+    ADD_NOTIFICATION(state, data) {
+      state.notifications = data;
+    },
   },
   actions: {
     setAuth(context, value) {
-      context.commit('UPDATE_AUTH', value)
+      context.commit("UPDATE_AUTH", value);
     },
-    setAuthUser(context, value){
-      context.commit('UPDATE_AUTH_USER', value)
-    }
+    setAuthUser(context, value) {
+      context.commit("UPDATE_AUTH_USER", value);
+    },
   },
   modules: {},
 });

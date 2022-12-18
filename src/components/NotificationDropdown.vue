@@ -3,45 +3,29 @@
     <div class="pos-rel notification" id="notification">
       <p
         @click="isShowing = !isShowing"
-        class="fw-700 fs-16 lh-24 cursor-pointer asterick"
+        class="fw-700 fs-16 lh-24 cursor-pointer"
+        :class="{ asterick: !isSeen && isNewNotification }"
       >
         Notification
       </p>
       <div v-if="isShowing" class="py-4">
-        <div class="px-4 py-2 d-flex align-items-start c-gap-2 item">
+        <div
+          v-for="(notification, i) in notifications"
+          :key="i"
+          class="px-4 py-2 d-flex align-items-start c-gap-2 item"
+        >
           <div class="d-flex justify-content-center align-items-center img">
-            KA
+            {{
+              `${userData.firstName[0].toUpperCase()}${userData.lastName[0].toUpperCase()}`
+            }}
           </div>
           <div class="d-flex flex-column text-align-left">
             <p class="fw-400 fs-13 lh-18 grey">
-              Notification content. lorem ipsum si dolor ametconsectur a town
-              hall, different with bala blue blue blue, bulaba.
+              {{ notification.message }}
             </p>
-            <p class="fs-12 fw-400 lh-24 light-grey">23 November</p>
-          </div>
-        </div>
-        <div class="px-4 py-2 d-flex align-items-start c-gap-2 item">
-          <div class="d-flex justify-content-center align-items-center img">
-            KA
-          </div>
-          <div class="d-flex flex-column text-align-left">
-            <p class="fw-400 fs-13 lh-18 grey">
-              Notification content. lorem ipsum si dolor ametconsectur a town
-              hall, different with bala blue blue blue, bulaba.
+            <p class="fs-12 fw-400 lh-24 light-grey">
+              {{ new Date(notification.dateCreated).toDateString() }}
             </p>
-            <p class="fs-12 fw-400 lh-24 light-grey">23 November</p>
-          </div>
-        </div>
-        <div class="px-4 py-2 d-flex align-items-start c-gap-2 item">
-          <div class="d-flex justify-content-center align-items-center img">
-            KA
-          </div>
-          <div class="d-flex flex-column text-align-left">
-            <p class="fw-400 fs-13 lh-18 grey">
-              Notification content. lorem ipsum si dolor ametconsectur a town
-              hall, different with bala blue blue blue, bulaba.
-            </p>
-            <p class="fs-12 fw-400 lh-24 light-grey">23 November</p>
           </div>
         </div>
       </div>
@@ -50,12 +34,32 @@
 </template>
 
 <script>
+import Axios from "@/auth/axios";
+import { mapState } from "vuex";
 export default {
   name: "NotificationDropdown",
   data() {
     return {
       isShowing: false,
+      isSeen: false,
     };
+  },
+  watch: {
+    isShowing: {
+      handler(newV) {
+        if (newV) {
+          this.isSeen = true;
+          Axios.post(`users/read-all-notifications/${this.userData._id}`);
+        }
+      },
+      immediate: false,
+    },
+  },
+  computed: {
+    ...mapState(["notifications", "userData"]),
+    isNewNotification() {
+      return !this.notifications.every((elem) => elem.active == false);
+    },
   },
   mounted() {
     let box = document.getElementById("notification");

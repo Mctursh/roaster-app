@@ -41,6 +41,7 @@ export default {
       Axios.get(`users/${this.userId}`).then((r) => {
         console.log(r);
         this.$store.dispatch("setAuthUser", r.data.user);
+        this.$store.commit("ADD_NOTIFICATION", r.data.notifications);
       });
     },
   },

@@ -2,8 +2,8 @@ import router from "@/router";
 import store from "@/store";
 import axios from "axios"
 
-const baseURL = process.env.BASE_URL
-
+const baseURL = process.env.VUE_APP_BASE_URL
+console.log(baseURL);
 const Axios = axios.create({
     baseURL,
     headers: { 

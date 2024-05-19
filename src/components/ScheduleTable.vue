@@ -29,7 +29,7 @@
             :key="i"
             class="px-2 py-2"
             @click="showModal(val, shift)"
-            :class="{ 'primary-bg': shift.id == userId }"
+            :class="{ 'primary-bg': shift.id == userId, 'cursor-pointer': !isAdmin }"
           >
             <!-- v-b-modal.modal-center -->
             <div
@@ -48,12 +48,14 @@
     </div>
     <div class="d-flex align-items-center c-gap-3 justify-content-end mt-4">
       <b-button
+        :disabled="page == 0"
         @click="prevSchedules"
         class="fw-600 fs-16 lh-24 grey"
         variant="light"
         >Previous</b-button
       >
       <b-button
+      :disabled="isNextTrue"
         @click="nextSchedules"
         class="fw-600 fs-16 lh-24 grey"
         variant="light"
@@ -176,7 +178,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["dates", "structure", "userId"]),
+    ...mapState(["dates", "structure", "userId", "isAdmin"]),
     dateToShow() {
       return this.dates.slice(this.start, this.end);
     },
@@ -214,6 +216,15 @@ export default {
 
       return toReturn;
     },
+    isNextTrue(){
+      const firstUserShiftsNumber = this.users[0].shifts.length
+      let chunks = Math.ceil(firstUserShiftsNumber / 7)
+      if(this.page + 1 >= chunks){
+        return true
+      } else {
+        return false
+      }
+    }
   },
 
   methods: {
@@ -251,6 +262,7 @@ export default {
       });
     },
     showModal(val, userObj) {
+      if(this.isAdmin) return
       if (userObj.id == this.userId) {
         this.targetShift = "O";
       } else {

@@ -129,7 +129,7 @@ export default {
     ]),
   },
   mounted() {
-    Axios.post("/users/create-admin");
+    // Axios.post("/users/create-admin");
   },
   methods: {
     toastForgot() {

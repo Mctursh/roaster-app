@@ -2,7 +2,7 @@ import router from "@/router";
 import store from "@/store";
 import axios from "axios"
 
-const baseURL = 'http://localhost:8000/'
+const baseURL = process.env.BASE_URL
 
 const Axios = axios.create({
     baseURL,

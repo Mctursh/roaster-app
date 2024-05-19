@@ -501,6 +501,10 @@ h6 {
   cursor: pointer;
 }
 
+button:disabled{
+  cursor: not-allowed;
+}
+
 .home {
   padding: 2em 8em;
 }

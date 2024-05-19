@@ -18,13 +18,13 @@
 import Axios from "@/auth/axios";
 import ScheduleTable from "../components/ScheduleTable.vue";
 import { mapState } from "vuex";
-import { BIconLayoutThreeColumns } from "bootstrap-vue";
+// import { BIconLayoutThreeColumns } from "bootstrap-vue";
 export default {
   components: { ScheduleTable },
   data() {
     return {
       allUserData: [],
-      show: BIconLayoutThreeColumns,
+      show: true,
     };
   },
 
